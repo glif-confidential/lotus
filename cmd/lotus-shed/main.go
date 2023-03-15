@@ -83,6 +83,7 @@ func main() {
 		invariantsCmd,
 		gasTraceCmd,
 		replayOfflineCmd,
+		evmBalanceCmd,
 	}
 
 	app := &cli.App{
