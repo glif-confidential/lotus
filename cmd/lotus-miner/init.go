@@ -24,7 +24,6 @@ import (
 
 	"github.com/filecoin-project/go-address"
 	cborutil "github.com/filecoin-project/go-cbor-util"
-	"github.com/filecoin-project/go-paramfetch"
 	"github.com/filecoin-project/go-state-types/abi"
 	"github.com/filecoin-project/go-state-types/big"
 	"github.com/filecoin-project/go-state-types/builtin"
@@ -153,11 +152,11 @@ var initCmd = &cli.Command{
 
 		ctx := lcli.ReqContext(cctx)
 
-		log.Info("Checking proof parameters")
+		// log.Info("Checking proof parameters")
 
-		if err := paramfetch.GetParams(ctx, build.ParametersJSON(), build.SrsJSON(), uint64(ssize)); err != nil {
-			return xerrors.Errorf("fetching proof parameters: %w", err)
-		}
+		// if err := paramfetch.GetParams(ctx, build.ParametersJSON(), build.SrsJSON(), uint64(ssize)); err != nil {
+		// 	return xerrors.Errorf("fetching proof parameters: %w", err)
+		// }
 
 		log.Info("Trying to connect to full node RPC")
 
