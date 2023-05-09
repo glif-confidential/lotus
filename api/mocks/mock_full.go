@@ -27,6 +27,7 @@ import (
 	auth "github.com/filecoin-project/go-jsonrpc/auth"
 	abi "github.com/filecoin-project/go-state-types/abi"
 	big "github.com/filecoin-project/go-state-types/big"
+	smoothing "github.com/filecoin-project/go-state-types/builtin/v10/util/smoothing"
 	paych "github.com/filecoin-project/go-state-types/builtin/v8/paych"
 	miner "github.com/filecoin-project/go-state-types/builtin/v9/miner"
 	verifreg "github.com/filecoin-project/go-state-types/builtin/v9/verifreg"
@@ -3639,18 +3640,18 @@ func (mr *MockFullNodeMockRecorder) StateMinerSectors(arg0, arg1, arg2, arg3 int
 }
 
 // StateMinerStats mocks base method.
-func (m *MockFullNode) StateMinerStats(arg0 context.Context, arg1 address.Address, arg2 types.TipSetKey) (api.MinerStats, error) {
+func (m *MockFullNode) StateMinerStats(arg0 context.Context, arg1 address.Address, arg2 types.TipSetKey, arg3, arg4 smoothing.FilterEstimate) (api.MinerStats, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StateMinerStats", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "StateMinerStats", arg0, arg1, arg2, arg3, arg4)
 	ret0, _ := ret[0].(api.MinerStats)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // StateMinerStats indicates an expected call of StateMinerStats.
-func (mr *MockFullNodeMockRecorder) StateMinerStats(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockFullNodeMockRecorder) StateMinerStats(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StateMinerStats", reflect.TypeOf((*MockFullNode)(nil).StateMinerStats), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StateMinerStats", reflect.TypeOf((*MockFullNode)(nil).StateMinerStats), arg0, arg1, arg2, arg3, arg4)
 }
 
 // StateNetworkName mocks base method.

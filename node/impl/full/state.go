@@ -25,6 +25,7 @@ import (
 	"github.com/filecoin-project/go-state-types/crypto"
 	"github.com/filecoin-project/go-state-types/dline"
 	"github.com/filecoin-project/go-state-types/network"
+	"github.com/filecoin-project/specs-actors/actors/util/smoothing"
 	market2 "github.com/filecoin-project/specs-actors/v2/actors/builtin/market"
 	market5 "github.com/filecoin-project/specs-actors/v5/actors/builtin/market"
 	miner8 "github.com/filecoin-project/specs-actors/v8/actors/builtin/miner"
@@ -144,7 +145,9 @@ func (a *StateAPI) StateMinerActiveSectors(ctx context.Context, maddr address.Ad
 	return mas.LoadSectors(&activeSectors)
 }
 
-func (m *StateAPI) StateMinerStats(ctx context.Context, maddr address.Address, tsk types.TipSetKey, smoothedRew, smoothedPow smoothing8.FilterEstimate) (api.MinerStats, error) {
+func (m *StateAPI) StateMinerStats(ctx context.Context, maddr address.Address, tsk types.TipSetKey, smoothedRew, smoothedPow smoothing.FilterEstimate) (api.MinerStats, error) {
+	smoothedRew8 := smoothing8.FilterEstimate(smoothedRew)
+	smoothedPow8 := smoothing8.FilterEstimate(smoothedPow)
 	act, err := m.StateManager.LoadActorTsk(ctx, maddr, tsk)
 	if err != nil {
 		return api.MinerStats{}, xerrors.Errorf("failed to load miner actor: %w", err)
@@ -208,16 +211,16 @@ func (m *StateAPI) StateMinerStats(ctx context.Context, maddr address.Address, t
 		sectorPower := miner8.QAPowerForSector(info.SectorSize, s8)
 
 		// penalty for missing a PoST window for sector
-		sectorFaultPenaltyPerDay := miner8.PledgePenaltyForContinuedFault(smoothedRew, smoothedPow, sectorPower)
+		sectorFaultPenaltyPerDay := miner8.PledgePenaltyForContinuedFault(smoothedRew8, smoothedPow8, sectorPower)
 
 		// penalty for termination the sector
 		sectorTerminationPenalty := miner8.PledgePenaltyForTermination(
 			s.ExpectedDayReward,
 			currEpoch-s.Activation,
 			s.ExpectedStoragePledge,
-			smoothedPow,
+			smoothedPow8,
 			sectorPower,
-			smoothedRew,
+			smoothedRew8,
 			s.ReplacedDayReward,
 			s.ReplacedSectorAge,
 		)

@@ -25,6 +25,7 @@ import (
 	"github.com/filecoin-project/go-jsonrpc"
 	"github.com/filecoin-project/go-jsonrpc/auth"
 	"github.com/filecoin-project/go-state-types/abi"
+	"github.com/filecoin-project/go-state-types/builtin/v10/util/smoothing"
 	"github.com/filecoin-project/go-state-types/builtin/v8/paych"
 	"github.com/filecoin-project/go-state-types/builtin/v9/miner"
 	verifregtypes "github.com/filecoin-project/go-state-types/builtin/v9/verifreg"
@@ -544,7 +545,7 @@ type FullNodeMethods struct {
 
 	StateMinerSectors func(p0 context.Context, p1 address.Address, p2 *bitfield.BitField, p3 types.TipSetKey) ([]*miner.SectorOnChainInfo, error) `perm:"read"`
 
-	StateMinerStats func(p0 context.Context, p1 address.Address, p2 types.TipSetKey) (MinerStats, error) `perm:"read"`
+	StateMinerStats func(p0 context.Context, p1 address.Address, p2 types.TipSetKey, p3 smoothing.FilterEstimate, p4 smoothing.FilterEstimate) (MinerStats, error) `perm:"read"`
 
 	StateNetworkName func(p0 context.Context) (dtypes.NetworkName, error) `perm:"read"`
 
@@ -3681,14 +3682,14 @@ func (s *FullNodeStub) StateMinerSectors(p0 context.Context, p1 address.Address,
 	return *new([]*miner.SectorOnChainInfo), ErrNotSupported
 }
 
-func (s *FullNodeStruct) StateMinerStats(p0 context.Context, p1 address.Address, p2 types.TipSetKey) (MinerStats, error) {
+func (s *FullNodeStruct) StateMinerStats(p0 context.Context, p1 address.Address, p2 types.TipSetKey, p3 smoothing.FilterEstimate, p4 smoothing.FilterEstimate) (MinerStats, error) {
 	if s.Internal.StateMinerStats == nil {
 		return *new(MinerStats), ErrNotSupported
 	}
-	return s.Internal.StateMinerStats(p0, p1, p2)
+	return s.Internal.StateMinerStats(p0, p1, p2, p3, p4)
 }
 
-func (s *FullNodeStub) StateMinerStats(p0 context.Context, p1 address.Address, p2 types.TipSetKey) (MinerStats, error) {
+func (s *FullNodeStub) StateMinerStats(p0 context.Context, p1 address.Address, p2 types.TipSetKey, p3 smoothing.FilterEstimate, p4 smoothing.FilterEstimate) (MinerStats, error) {
 	return *new(MinerStats), ErrNotSupported
 }
 

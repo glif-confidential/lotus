@@ -19,6 +19,7 @@ import (
 	"github.com/filecoin-project/go-jsonrpc"
 	"github.com/filecoin-project/go-state-types/abi"
 	"github.com/filecoin-project/go-state-types/big"
+	"github.com/filecoin-project/go-state-types/builtin/v10/util/smoothing"
 	"github.com/filecoin-project/go-state-types/builtin/v8/paych"
 	"github.com/filecoin-project/go-state-types/builtin/v9/market"
 	"github.com/filecoin-project/go-state-types/builtin/v9/miner"
@@ -486,7 +487,7 @@ type FullNode interface {
 	// StateMinerSectorAllocated checks if a sector number is marked as allocated.
 	StateMinerSectorAllocated(context.Context, address.Address, abi.SectorNumber, types.TipSetKey) (bool, error) //perm:read
 	// StateMinerStats returns the indicated miner's stats for the given tipset
-	StateMinerStats(context.Context, address.Address, types.TipSetKey) (MinerStats, error) //perm:read
+	StateMinerStats(context.Context, address.Address, types.TipSetKey, smoothing.FilterEstimate, smoothing.FilterEstimate) (MinerStats, error) //perm:read
 	// StateSectorPreCommitInfo returns the PreCommit info for the specified miner's sector.
 	// Returns nil and no error if the sector isn't precommitted.
 	//
